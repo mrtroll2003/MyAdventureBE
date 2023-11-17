@@ -50,4 +50,27 @@ router.post("/sign_in", async (req, res) => {
   }
 });
 
+router.post("/forgot_password", async (req, res) => {
+  try {
+    let { email, password } = req.body;
+    console.log(email, password);
+    password = bcrypt.hashSync(password, 10);
+
+    const user = await Account.findOne({ email });
+
+    if (!user) {
+      res.status(401).send("Unauthorized");
+      return;
+    }
+
+    const updated = await Account.updateOne({email}, {password})
+
+    res.status(200).json({message: "Change Password Successfully"});
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
+
 module.exports = router;
