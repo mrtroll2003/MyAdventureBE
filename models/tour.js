@@ -6,7 +6,13 @@ const tourSchema = new mongoose.Schema({
   departureDate: { type: Date, required: true },
   returnDate: { type: Date, required: true },
   price: { type: Number, required: true },
-  tourDetails: { type: String, required: true },
+  details: { type: String, required: true },
+  area: { type: String, required: true },
+  isVNTour: { type: Boolean, required: true },
+  hotel: { type: String, required: true },
+  transport: { type: String, required: true },
+  checkin: { type: Date, required: true },
+  checkout: { type: Date, required: true },
 });
 
 const Tour = mongoose.model("Tour", tourSchema);

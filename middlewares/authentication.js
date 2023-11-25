@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { db } = require("../models/database.js");
+const Account = require("../models/account");
 
 async function Authentication(req, res, next) {
   console.log(req.headers);
@@ -27,15 +27,16 @@ async function Authentication(req, res, next) {
       return;
     }
 
-    const col = db.collection("accounts");
-
-    const user = await col.findOne({ _id: id});
+    const user = await Account.findOne({ _id: id });
     console.log(user);
 
     if (!user) {
       res.status(403).send("Forbidden");
       return;
     }
+
+    req.user = user;
+    
   } catch (err) {
     if (err.message === "invalid signature") {
       res.status(403).send("Forbidden");
