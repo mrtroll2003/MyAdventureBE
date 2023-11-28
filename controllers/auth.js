@@ -42,7 +42,7 @@ router.post("/sign_in", async (req, res) => {
 
     const payload = { id: user._id };
 
-    const body = { token: jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET), isAdmin: user.isAdmin };
+    const body = { token: jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET), isAdmin: user.isAdmin, email: user.email };
     res.json(body);
   } catch (err) {
     console.log(err.stack);
