@@ -39,5 +39,12 @@ router.post("/add", async (req, res) => {
       });
 }})
 
+router.get("/booking", async (req, res) => {
+  const bookingEmail  = req.query.bookingEmail;
+  const bookingDate  = req.query.bookingDate;
+  const adults = await Adult.find({ bookingEmail, bookingDate });
+  res.json(adults);
+});
+
 
 module.exports = router;

@@ -54,5 +54,11 @@ router.post("/add", async (req, res) => {
       });
 }})
 
+router.get("/booking", async (req, res) => {
+  const bookingEmail  = req.query.bookingEmail;
+  const bookingDate  = req.query.bookingDate;
+  const children = await Children.find({ bookingEmail, bookingDate });
+  res.json(children);
+});
 
 module.exports = router;
