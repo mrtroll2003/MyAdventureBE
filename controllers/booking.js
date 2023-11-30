@@ -50,5 +50,11 @@ router.post("/add", async (req, res) => {
       });
 }})
 
+router.get("/email", async (req, res) => {
+  const email  = req.query.email;
+  const bookings = await Booking.find({ email });
+  res.json(bookings);
+});
+
 
 module.exports = router;
