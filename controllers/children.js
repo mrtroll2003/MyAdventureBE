@@ -22,6 +22,7 @@ router.post("/add", async (req, res) => {
     try {
         const bookingEmail = req.body.bookingEmail;
         const bookingDate = req.body.bookingDate;
+        const tourID = req.body.tourID;
         const name = req.body.name;
         const sex = req.body.sex;
         const dob = req.body.dob;
@@ -40,6 +41,7 @@ router.post("/add", async (req, res) => {
         const children = new Children({
           bookingEmail,
           bookingDate,
+          tourID,
           name,
           sex,
           dob,
@@ -58,6 +60,12 @@ router.get("/booking", async (req, res) => {
   const bookingEmail  = req.query.bookingEmail;
   const bookingDate  = req.query.bookingDate;
   const children = await Children.find({ bookingEmail, bookingDate });
+  res.json(children);
+});
+
+router.get("/tour", async (req, res) => {
+  const tourID = req.query.tourID;
+  const children = await Children.find({ tourID });
   res.json(children);
 });
 
