@@ -13,6 +13,7 @@ router.post("/add", async (req, res) => {
     try {
         const bookingEmail = req.body.bookingEmail;
         const bookingDate = req.body.bookingDate;
+        const tourID = req.body.tourID;
         const name = req.body.name;
         const sex = req.body.sex;
         const dob = req.body.dob;
@@ -23,6 +24,7 @@ router.post("/add", async (req, res) => {
         const adult = new Adult({
           bookingEmail,
           bookingDate,
+          tourID,
           name,
           sex,
           dob,
@@ -46,5 +48,11 @@ router.get("/booking", async (req, res) => {
   res.json(adults);
 });
 
+
+router.get("/tour", async (req, res) => {
+  const tourID = req.query.tourID;
+  const adults = await Adult.find({tourID});
+  res.json(adults);
+});
 
 module.exports = router;

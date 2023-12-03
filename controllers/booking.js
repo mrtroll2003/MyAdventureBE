@@ -18,10 +18,7 @@ router.post("/add", async (req, res) => {
         const address = req.body.address;
         const note = req.body.note;
         const rating = req.body.rating;
-        const departure = req.body.departure;
-        const destination = req.body.destination;
-        const departureDate = req.body.departureDate;
-        const returnDate = req.body.returnDate;
+        const tourID = req.body.tourID;
         const status = req.body.status;
         const date = req.body.date;
 
@@ -33,10 +30,7 @@ router.post("/add", async (req, res) => {
           address,
           note,
           rating,
-          departure,
-          destination,
-          departureDate,
-          returnDate,
+          tourID,
           status,
           date,
         })
@@ -53,6 +47,12 @@ router.post("/add", async (req, res) => {
 router.get("/email", async (req, res) => {
   const email  = req.query.email;
   const bookings = await Booking.find({ email });
+  res.json(bookings);
+});
+
+router.get("/tour", async (req, res) => {
+  const tourID = req.query.tourID;
+  const bookings = await Booking.find({tourID});
   res.json(bookings);
 });
 

@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 
 const bookingSchema = new mongoose.Schema({
@@ -8,10 +9,7 @@ const bookingSchema = new mongoose.Schema({
   address: { type: String, required: true},
   note: { type: String},
   rating: { type: Number},
-  departure: { type: String, required: true },
-  destination: { type: String, required: true },
-  departureDate: { type: Date, required: true },
-  returnDate: { type: Date, required: true },
+  tourID: {type: ObjectId, required: true},
   status: { type: String, required: true },
   date: { type: Date, required: true},
 }, { collection: 'booking' });
