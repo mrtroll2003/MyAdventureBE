@@ -8,6 +8,43 @@ router.get("/", async (req, res) => {
   res.json(bookings);
 });
 
+router.get("/id", async (req, res) => {
+  const id = req.query.id;
+  try {
+    const booking = await Booking.findOne({_id : id });
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+    res.json(booking);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+router.post("/update", async (req, res) => {
+  try {
+    let { bookingID, name, phone, address, nationality, note } = req.body;
+
+    const booking = await Booking.findOne({ _id: bookingID });
+
+    if (!booking) {
+      res.status(401).send("No booking found");
+      return;
+    }
+
+    const updated = await Booking.updateOne({ _id: bookingID },
+      { name, phone, address, nationality, note })
+
+    res.status(200).json(updated);
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
+
 
 router.post("/add", async (req, res) => {
     try {
@@ -35,12 +72,11 @@ router.post("/add", async (req, res) => {
           date,
         })
 
-        await booking.save(); // Save the booking to the database
+        await booking.save();
         res.json({ success: true, booking });
     } catch (error) {
       res.status(400).json({
         error
-        // error: 'Your request could not be processed. Please try again.'
       });
 }})
 

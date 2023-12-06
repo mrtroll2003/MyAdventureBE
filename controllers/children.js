@@ -28,16 +28,6 @@ router.post("/add", async (req, res) => {
         const dob = req.body.dob;
         const birthCert = req.body.birthCert;
 
-        // const { data, error } = await supabase.storage
-        // .from('BirthCert')
-        // .upload(birthCert);
-
-        // if (error) {
-        //   throw new Error('Error uploading birth certificate to Supabase');
-        // }
-        
-        // const birthCertUrl = data.publicURL;
-
         const children = new Children({
           bookingEmail,
           bookingDate,
@@ -55,6 +45,29 @@ router.post("/add", async (req, res) => {
         error
       });
 }})
+
+
+router.post("/update", async (req, res) => {
+  try {
+    let { _id, name, sex, birthCert } = req.body;
+
+    const child = await Children.findOne({ _id});
+
+    if (!child) {
+      res.status(401).send("No children found");
+      return;
+    }
+
+    const updated = await Children.updateOne({ _id},
+      { name, sex, birthCert})
+
+    res.status(200).json("Update successfully");
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
 
 router.get("/booking", async (req, res) => {
   const bookingEmail  = req.query.bookingEmail;

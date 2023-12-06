@@ -41,6 +41,27 @@ router.post("/add", async (req, res) => {
       });
 }})
 
+router.post("/update", async (req, res) => {
+  try {
+    let { _id , name, sex,dob ,ID, phone,email } = req.body;
+    const adult = await Adult.findOne({ _id });
+    if (!adult) {
+      res.status(401).send("No adult found");
+      return;
+    }
+
+    const updated = await Adult.updateOne({ _id},
+      { name, sex, dob, ID, phone, email })
+
+    res.status(200).json("Update successfully");
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
+
+
 router.get("/booking", async (req, res) => {
   const bookingEmail  = req.query.bookingEmail;
   const bookingDate  = req.query.bookingDate;
