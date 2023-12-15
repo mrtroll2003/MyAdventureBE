@@ -22,6 +22,28 @@ router.get("/id", async (req, res) => {
   }
 });
 
+router.post("/update-status", async (req, res) => {
+  try {
+    let { bookingID ,status } = req.body;
+
+    const booking = await Booking.findOne({ _id: bookingID });
+
+    if (!booking) {
+      res.status(401).send("No booking found");
+      return;
+    }
+
+    const updated = await Booking.updateOne({ _id: bookingID },
+      { status })
+
+    res.status(200).json(updated);
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
+
 
 router.post("/update", async (req, res) => {
   try {
@@ -92,5 +114,27 @@ router.get("/tour", async (req, res) => {
   res.json(bookings);
 });
 
+
+router.post("/update-rating", async (req, res) => {
+  try {
+    let { bookingID, rating } = req.body;
+
+    const booking = await Booking.findOne({ _id: bookingID });
+
+    if (!booking) {
+      res.status(401).send("No booking found");
+      return;
+    }
+
+    const updated = await Booking.updateOne({_id: bookingID },
+      {rating })
+
+    res.status(200).json(updated);
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
 
 module.exports = router;
