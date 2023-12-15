@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
 
 router.get("/place", async (req, res) => {
   const name  = req.query.name;
-  const image = await Image.find({ name });
+  const image = await Image.findOne({ name });
   res.json(image);
 });
 
