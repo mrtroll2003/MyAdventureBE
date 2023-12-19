@@ -252,6 +252,28 @@ router.get("/international-tours/australia-destinations", async (req, res) => {
   }
 });
 
+router.post("/update", async (req, res) => {
+  try {
+    let { tourID, transport, departureDate, returnDate, hotel, checkinDate, checkoutDate, details, price } = req.body;
+
+    const tour = await Tour.findOne({ _id: tourID });
+
+    if (!tour) {
+      res.status(401).send("No tour found");
+      return;
+    }
+
+    const updated = await Tour.updateOne({_id: tourID },
+      {transport, departureDate, returnDate, hotel, checkin: checkinDate, checkout: checkoutDate, details, price })
+
+    res.status(200).json(updated);
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
+
 
 
 module.exports = router;
