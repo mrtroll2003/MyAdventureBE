@@ -49,7 +49,7 @@ router.post("/add", async (req, res) => {
 
 router.post("/update", async (req, res) => {
   try {
-    let { _id, name, sex, birthCert } = req.body;
+    let { _id, name, sex, dob, birthCert } = req.body;
 
     const child = await Children.findOne({ _id});
 
@@ -59,7 +59,7 @@ router.post("/update", async (req, res) => {
     }
 
     const updated = await Children.updateOne({ _id},
-      { name, sex, birthCert})
+      { name, dob, sex, birthCert})
 
     res.status(200).json("Update successfully");
     
