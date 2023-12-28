@@ -2,15 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-
-// const { createClient } = require('@supabase/supabase-js');
-
-// const supabase = createClient({
-//   apiKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rYXhub3hvY2FnbGl6enJmaGp3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwMDEyMDI2NCwiZXhwIjoyMDE1Njk2MjY0fQ.6ZNDz2LY3uTglFR2sqJvyPirr00voeSv9BNBRDU_F08',
-//   apiURL: 'https://nkaxnoxocaglizzrfhjw.supabase.co',
-// });
-
-
 const authRouter = require("./controllers/auth.js");
 const tourRouter = require("./controllers/tour.js");
 const imageRouter = require("./controllers/image.js");

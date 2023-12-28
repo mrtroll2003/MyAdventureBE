@@ -13,6 +13,7 @@ const tourSchema = new mongoose.Schema({
   transport: { type: String, required: true },
   checkin: { type: Date, required: true },
   checkout: { type: Date, required: true },
+  isCancel: { type: Boolean, required: true}, 
 });
 
 const Tour = mongoose.model("Tour", tourSchema);

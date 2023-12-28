@@ -12,6 +12,7 @@ const bookingSchema = new mongoose.Schema({
   tourID: {type: ObjectId, required: true},
   status: { type: String, required: true },
   date: { type: Date, required: true},
+  price: { type: Number, required: true},
 }, { collection: 'booking' });
 
 const Booking = mongoose.model("Booking", bookingSchema);

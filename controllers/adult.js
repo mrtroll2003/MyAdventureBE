@@ -43,7 +43,7 @@ router.post("/add", async (req, res) => {
 
 router.post("/update", async (req, res) => {
   try {
-    let { _id , name, sex,dob ,ID, phone,email } = req.body;
+    let { _id , name, sex, dob ,ID, phone,email } = req.body;
     const adult = await Adult.findOne({ _id });
     if (!adult) {
       res.status(401).send("No adult found");
