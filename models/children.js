@@ -8,7 +8,7 @@ const childrenSchema = new mongoose.Schema({
   name: { type: String, required: true},
   sex: { type: String, required: true},
   dob: { type: Date, required: true},
-  birthCert: { type: Object, required: true},
+  birthCert: { type: String, required: true},
 },{ collection: 'children' });
 
 const Children = mongoose.model("Children", childrenSchema);

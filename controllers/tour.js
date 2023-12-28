@@ -276,4 +276,88 @@ router.post("/update", async (req, res) => {
 
 
 
+
+router.post("/add", async (req, res) => {
+  try {
+    const departure = req.body.departure;
+    const destination = req.body.destination;
+    const transport = req.body.transport;
+    const departureDate = req.body.departureDate;
+    const returnDate = req.body.returnDate;
+    const hotel = req.body.hotel;
+    const checkin = req.body.checkin;
+    const checkout = req.body.checkout;
+    const details = req.body.details;
+    const price = req.body.price;
+    const isVNTour = req.body.isVNTour;
+    const area = req.body.area;
+
+
+    const tour = new Tour({
+      departure,
+      destination,
+      transport,
+      departureDate,
+      returnDate,
+      hotel,
+      checkin,
+      checkout,
+      details,
+      price,
+      isVNTour,
+      area,
+      isCancel:  false,
+    })
+
+    console.log(tour);
+
+      await tour.save();
+      res.status(200).json({ success: true, tour });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      error
+    });
+}})
+
+
+router.post("/update1", async (req, res) => {
+  try {
+    const result = await Tour.updateMany({}, { $set: { isCancel: false } });
+    if (result.nModified !== undefined) {
+      console.log('Successfully updated', result.nModified, 'documents');
+    } else {
+      console.log('No documents were modified');
+    }
+    res.status(200).json({ message: 'Update successful' });
+  } catch (error) {
+    console.error('Error updating documents:', error);
+    res.status(500).json({ error: 'An error occurred while updating documents' });
+  }
+});
+
+router.post("/update-status", async (req, res) => {
+  try {
+    let { tourID, isCancel } = req.body;
+
+    const tour = await Tour.findOne({ _id: tourID });
+
+    if (!tour) {
+      res.status(401).send("No tour found");
+      return;
+    }
+
+    const updated = await Tour.updateOne({_id: tourID },
+      {isCancel })
+
+    res.status(200).json(updated);
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
+
+
+
 module.exports = router;

@@ -80,6 +80,7 @@ router.post("/add", async (req, res) => {
         const tourID = req.body.tourID;
         const status = req.body.status;
         const date = req.body.date;
+        const price = req.body.price;
 
         const booking = new Booking({
           email,
@@ -92,6 +93,7 @@ router.post("/add", async (req, res) => {
           tourID,
           status,
           date,
+          price,
         })
 
         await booking.save();
@@ -134,6 +136,31 @@ router.post("/update-rating", async (req, res) => {
   } catch (err) {
     console.log(err.stack);
     res.status(500).json({ message: "Error server" });
+  }
+});
+
+router.post("/cancel-booking", async (req, res) => {
+  const { tourID } = req.body;
+
+  try {
+    const result = await Booking.updateMany({ tourID: tourID }, { $set: { status: "Cancelled" } });
+    console.log('Successfully cancelled', result.nModified, 'bookings');
+    res.status(200).json({ message: 'Cancellation successful' });
+  } catch (error) {
+    console.error('Error cancelling bookings:', error);
+    res.status(500).json({ error: 'An error occurred while cancelling bookings' });
+  }
+});
+
+router.get("/booking-year", async (req, res) => {
+  try {
+    const bookings = await Booking.find();
+    const years = bookings.map(booking => new Date(booking.date).getFullYear());
+    const uniqueYears = Array.from(new Set(years));
+    res.json(uniqueYears);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

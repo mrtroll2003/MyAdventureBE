@@ -1,16 +1,10 @@
 const express = require("express");
 const router = express.Router();
-
-// const { createClient } = require('@supabase/supabase-js');
-
-// const supabase = createClient({
-//   apiKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rYXhub3hvY2FnbGl6enJmaGp3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwMDEyMDI2NCwiZXhwIjoyMDE1Njk2MjY0fQ.6ZNDz2LY3uTglFR2sqJvyPirr00voeSv9BNBRDU_F08',
-//   apiURL: 'https://nkaxnoxocaglizzrfhjw.supabase.co',
-// });
-
-// const { supabase } = require("../index"); 
-
+const multer = require("multer");
 const Children = require("../models/children");
+const supabase = require("../supabase");
+const storage = multer.memoryStorage();
+const upload = multer();
 
 router.get("/", async (req, res) => {
   const children = await Children.find();
@@ -80,6 +74,83 @@ router.get("/tour", async (req, res) => {
   const tourID = req.query.tourID;
   const children = await Children.find({ tourID });
   res.json(children);
+});
+
+// router.post(
+//   "/upload-image",
+//   upload.single("image"),
+//   async (req, res) => {
+//     try {
+//       console.log("hello")
+//       const childId = req.body.childID;
+//       console.log("hello1")
+//       cosole.log("childId", childId);
+
+//       // Upload image to Supabase storage
+//       const { data: uploadedFile, error } = await supabase.storage
+//         .from("myadventure")
+//         .upload(req.file.originalname, req.file.buffer);
+
+//         console.log("hello2")
+
+//       if (error) {
+//         throw new Error("Failed to upload image");
+//       }
+
+//       const imageUrl = uploadedFile.url;
+
+//       // Update the image field in the child document
+//       const child = await Children.findOne({ _id: childId });
+
+//       if (!child) {
+//         res.status(404).json({ error: "Child not found" });
+//         return;
+//       }
+
+//       child.birthCert = imageUrl;
+//       await child.save();
+
+//       res.json({ imageUrl });
+//     } catch (error) {
+//       console.error(error);
+//       res
+//         .status(500)
+//         .json({ error: "An error occurred during image upload" });
+//     }
+//   }
+// );
+
+router.post('/upload-image', upload.single('image'), async (req, res) => {
+  try {
+    const childId = req.body.childID;
+
+    // Upload image to Supabase storage
+    const { data: uploadedFile, error } = await supabase.storage
+      .from('myadventure')
+      .upload(req.file.originalname, req.file.buffer);
+
+    if (error) {
+      throw new Error('Failed to upload image');
+    }
+
+    const imageUrl = uploadedFile.url;
+
+    // Update the image field in the child document
+    const child = await Children.findOne({ _id: childId });
+
+    if (!child) {
+      res.status(404).json({ error: 'Child not found' });
+      return;
+    }
+
+    child.birthCert = imageUrl;
+    await child.save();
+
+    res.json({ imageUrl });
+  } catch (error) {
+    console.error('An error occurred during image upload:', error);
+    res.status(500).json({ error: 'An error occurred during image upload' });
+  }
 });
 
 module.exports = router;
