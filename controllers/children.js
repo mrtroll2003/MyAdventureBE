@@ -120,37 +120,59 @@ router.get("/tour", async (req, res) => {
 //   }
 // );
 
-router.post('/upload-image', upload.single('image'), async (req, res) => {
+router.post("/update-imageURL", async (req, res) => {
   try {
-    const childId = req.body.childID;
+    let { _id, birthCert } = req.body;
 
-    // Upload image to Supabase storage
-    const { data: uploadedFile, error } = await supabase.storage
-      .from('myadventure')
-      .upload(req.file.originalname, req.file.buffer);
-
-    if (error) {
-      throw new Error('Failed to upload image');
-    }
-
-    const imageUrl = uploadedFile.url;
-
-    // Update the image field in the child document
-    const child = await Children.findOne({ _id: childId });
+    const child = await Children.findOne({ _id});
 
     if (!child) {
-      res.status(404).json({ error: 'Child not found' });
+      res.status(401).send("No children found");
       return;
     }
 
-    child.birthCert = imageUrl;
-    await child.save();
+    const updated = await Children.updateOne({ _id},
+      { birthCert})
 
-    res.json({ imageUrl });
-  } catch (error) {
-    console.error('An error occurred during image upload:', error);
-    res.status(500).json({ error: 'An error occurred during image upload' });
+    res.status(200).json("Update successfully");
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
   }
 });
+
+// router.post('/upload-image', upload.single('image'), async (req, res) => {
+//   try {
+//     const childId = req.body.childID;
+
+//     // Upload image to Supabase storage
+//     const { data: uploadedFile, error } = await supabase.storage
+//       .from('myadventure')
+//       .upload(req.file.originalname, req.file.buffer);
+
+//     if (error) {
+//       throw new Error('Failed to upload image');
+//     }
+
+//     const imageUrl = uploadedFile.url;
+
+//     // Update the image field in the child document
+//     const child = await Children.findOne({ _id: childId });
+
+//     if (!child) {
+//       res.status(404).json({ error: 'Child not found' });
+//       return;
+//     }
+
+//     child.birthCert = imageUrl;
+//     await child.save();
+
+//     res.json({ imageUrl });
+//   } catch (error) {
+//     console.error('An error occurred during image upload:', error);
+//     res.status(500).json({ error: 'An error occurred during image upload' });
+//   }
+// });
 
 module.exports = router;
