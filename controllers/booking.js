@@ -81,6 +81,7 @@ router.post("/add", async (req, res) => {
         const status = req.body.status;
         const date = req.body.date;
         const price = req.body.price;
+        const payment = req.body.payment;
 
         const booking = new Booking({
           email,
@@ -94,6 +95,7 @@ router.post("/add", async (req, res) => {
           status,
           date,
           price,
+          payment,
         })
 
         await booking.save();
@@ -163,5 +165,30 @@ router.get("/booking-year", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+router.post("/update-payment", async (req, res) => {
+  try {
+    let { _id, payment } = req.body;
+
+    const booking = await Booking.findOne({ _id});
+
+    if (!booking) {
+      res.status(401).send("No booking found");
+      return;
+    }
+
+    console.log(booking)
+
+    const updated = await Booking.updateOne({ _id},
+      { payment})
+
+    res.status(200).json("Update successfully");
+    
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({ message: "Error server" });
+  }
+});
+
 
 module.exports = router;

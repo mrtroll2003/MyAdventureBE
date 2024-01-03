@@ -13,6 +13,7 @@ const bookingSchema = new mongoose.Schema({
   status: { type: String, required: true },
   date: { type: Date, required: true},
   price: { type: Number, required: true},
+  payment: { type: String, required: true},
 }, { collection: 'booking' });
 
 const Booking = mongoose.model("Booking", bookingSchema);
