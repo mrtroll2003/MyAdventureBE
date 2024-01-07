@@ -358,6 +358,35 @@ router.post("/update-status", async (req, res) => {
   }
 });
 
+router.get("/international-tours/date", async (req, res) => {
+  try {
+    const tourDates = await Tour.distinct("departureDate", { isVNTour: false });
+
+    if (!tourDates) {
+      return res.status(404).json({ error: "Tour dates not found" });
+    }
+
+    res.json(tourDates);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/vietnam-tours/date", async (req, res) => {
+  try {
+    const tourDates = await Tour.distinct("departureDate", { isVNTour: true });
+
+    if (!tourDates) {
+      return res.status(404).json({ error: "Tour dates not found" });
+    }
+
+    res.json(tourDates);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 
 module.exports = router;

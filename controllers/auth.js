@@ -4,18 +4,24 @@ const jwt = require("jsonwebtoken");
 const Account = require("../models/account");
 const router = express.Router();
 
-router.get("/hello", async (req, res) => {
-  res.send("Hello");
+router.get("/", async (req, res) => {
+  const accounts = await Account.find();
+  res.json(accounts);
 });
 
 router.post("/sign_up", async (req, res) => {
   let { email, password } = req.body;
+  const isAdmin = false;
   password = bcrypt.hashSync(password, 10);
+  const account = await Account.findOne({email});
+  if (account) {
+    return res.status(409).json({ error: "email is already in use" });
+  }
   try {
-    const account = new Account({ email, password });
+    const account = new Account({ email, password, isAdmin });
     await account.save();
     console.log(account);
-    res.status(202).send("created ");
+    res.status(202).send("created");
   } catch (err) {
     if (err.code === 11000) res.status(409).send("email is already in use");
     else res.status(500).send(err.message);

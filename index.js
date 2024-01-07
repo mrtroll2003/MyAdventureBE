@@ -16,7 +16,7 @@ const { Authorization } = require("./middlewares/authorization.js");
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// app.use(cors());
+app.use(cors());
 app.use("/auth", authRouter);
 app.use("/tour", tourRouter);
 app.use("/image", imageRouter);
