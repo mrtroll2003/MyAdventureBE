@@ -13,6 +13,7 @@ const bankingAccountRouter = require("./controllers/bankingAccount.js");
 var bodyParser = require("body-parser");
 const { Authentication } = require("./middlewares/authentication.js");
 const { Authorization } = require("./middlewares/authorization.js");
+const Booking = require("./models/booking.js");
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -35,6 +36,33 @@ app.get("/user", Authentication, Authorization("user"), async (req, res) => {
 });
 
 require("dotenv").config();
+
+// Booking.aggregate([
+//   {
+//     $lookup: {
+//       from: "tours",
+//       localField: "tourID",
+//       foreignField: "_id",
+//       as: "tours"
+//     }
+//   },
+//   {
+//     $match: {
+//       "tours.returnDate": { $lt: new Date() }
+//     }
+//   },
+//   {
+//     $set: {
+//       status: "Finish"
+//     }
+//   }
+// ])
+//   .then((result) => {
+//     console.log("Updated bookings:", result);
+//   })
+//   .catch((error) => {
+//     console.error("Error:", error);
+//   });
 
 app.listen(3001, async () => {
   console.log("Server is running on port 3001");

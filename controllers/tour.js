@@ -388,5 +388,48 @@ router.get("/vietnam-tours/date", async (req, res) => {
   }
 });
 
+router.get("/date", async (req, res) => {
+  try {
+    const tourDates = await Tour.distinct("departureDate");
+
+    if (!tourDates) {
+      return res.status(404).json({ error: "Tour dates not found" });
+    }
+
+    res.json(tourDates);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+const querystring = require('querystring');
+router.get('/find-date', async (req, res) => {
+  const encodedDate = req.query.date;
+  const date = querystring.unescape(encodedDate); 
+  const [day, month, year] = date.split('/');
+  const startDate = new Date(`${year}-${month}-${day}`);
+  const endDate = new Date(startDate.getTime() + 24 * 60 * 60 * 1000);
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(0, 0, 0, 0);
+
+  try {
+    const tour = await Tour.find({
+      departureDate: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    });
+    if (!tour) {
+      return res.status(404).json({ error: 'Tours are not found!' });
+    }
+    res.json(tour);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Error server' });
+  }
+});
+
+
 
 module.exports = router;
