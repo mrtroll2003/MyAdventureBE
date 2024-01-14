@@ -37,11 +37,6 @@ app.get("/user", Authentication, Authorization("user"), async (req, res) => {
 
 require("dotenv").config();
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
 
 app.listen(3001, async () => {
   console.log("Server is running on port 3001");
