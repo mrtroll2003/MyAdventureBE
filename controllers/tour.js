@@ -414,7 +414,7 @@ router.get('/find-date', async (req, res) => {
   endDate.setHours(0, 0, 0, 0);
 
   try {
-    const tour = await Tour.find({
+    const tour = await Tour.find  ({
       departureDate: {
         $gte: startDate,
         $lt: endDate,
