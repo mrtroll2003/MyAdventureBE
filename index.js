@@ -1,61 +1,53 @@
 const express = require("express");
-const bodyParser = require("body-parser");
-const path = require("path");
-const bcrypt = require("bcrypt");
-const cors = require("cors"); // Thêm dòng này
-
 const app = express();
-
-app.use(cors()); // Và dòng này
-
-// Phần còn lại của mã server của bạn
-
-
-const { MongoClient } = require("mongodb");
-
-
+const cors = require("cors");
+const mongoose = require("mongoose");
+const authRouter = require("./controllers/auth.js");
+const tourRouter = require("./controllers/tour.js");
+const imageRouter = require("./controllers/image.js");
+const ratingRouter = require("./controllers/rating.js");
+const bookingRouter = require("./controllers/booking.js");
+const adultRouter = require("./controllers/adult.js");
+const childrenRouter = require("./controllers/children.js");
+const bankingAccountRouter = require("./controllers/bankingAccount.js");
+var bodyParser = require("body-parser");
+const { Authentication } = require("./middlewares/authentication.js");
+const { Authorization } = require("./middlewares/authorization.js");
+const Booking = require("./models/booking.js");
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// Replace the following with your Atlas connection string
-const url = "mongodb+srv://21522041:12032003@cluster0.ebrkrjv.mongodb.net/?retryWrites=true&w=majority"
-const client = new MongoClient(url);
+app.use(cors());
+app.use("/auth", authRouter);
+app.use("/tour", tourRouter);
+app.use("/image", imageRouter);
+app.use("/rating", ratingRouter);
+app.use("/booking", bookingRouter);
+app.use("/adult", adultRouter);
+app.use("/children", childrenRouter);
+app.use("/banking-account", bankingAccountRouter);
 
-// Reference the database to use
-const dbName = "MyAdventure";
-
-app.post('/api/login', async (req, res) => {
-  try {
-    // Connect to the Atlas cluster
-    await client.connect();
-    const db = client.db(dbName);
-
-    console.log("hello")
-    // Reference the "account" collection
-    const col = db.collection("account");
-
-    // Get the user input from the login request
-    const { email, password } = req.body;
-
-    // Find the user document based on the email and password
-    const user = await col.findOne({ email, password });
-
-    if (user) {
-      // User found, login successful
-      console.log("Login successful");
-      res.json({ message: "Login successful" });
-    } else {
-      // User not found, invalid credentials
-      console.log("Invalid credentials");
-      res.status(401).json({ message: "Invalid credentials" });
-    }
-  } catch (err) {
-    console.log(err.stack);
-    res.status(500).json({ message: "Error server" });
-  } finally {
-    await client.close();
-  }
+app.get("/admin", Authentication, Authorization("admin"), async (req, res) => {
+  res.send("admin");
 });
 
-app.listen(3001, () => {
+app.get("/user", Authentication, Authorization("user"), async (req, res) => {
+  res.send("user");
+});
+
+require("dotenv").config();
+
+
+app.listen(3001, async () => {
   console.log("Server is running on port 3001");
+  await mongoose.connect(
+    "mongodb+srv://21522041:12032003@cluster0.cxvcnmf.mongodb.net/MyAdventure?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  );
 });
+
+// module.exports.supabase = supabase;
+module.exports = app;
