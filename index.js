@@ -113,3 +113,5 @@ app.listen(3001, async () => {
     }
   );
 });
+
+export default app;
