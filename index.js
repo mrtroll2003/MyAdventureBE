@@ -55,6 +55,4 @@ app.listen(3001, async () => {
 });
 
 // module.exports.supabase = supabase;
-
-module.exports.app = app;
-
+module.exports = app;
