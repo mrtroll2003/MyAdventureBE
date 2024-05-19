@@ -55,7 +55,7 @@ router.post("/update", async (req, res) => {
     const updated = await Children.updateOne({ _id},
       { name, dob, sex, birthCert})
 
-    res.status(200).json("Update successfully");
+    res.status(200).json('Update successfully');
     
   } catch (err) {
     console.log(err.stack);
